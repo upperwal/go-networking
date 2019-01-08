@@ -17,11 +17,11 @@ var log = logging.Logger("udp")
 func reader(c *net.UDPConn) {
 	buffer := make([]byte, 1000)
 	for {
-		i, err := c.Read(buffer)
+		i, raddr, err := c.ReadFromUDP(buffer)
 		if err != nil {
 			log.Error(err)
 		}
-		fmt.Println("Recent read: ", string(buffer[:i]))
+		fmt.Println("Recent read: ", string(buffer[:i]), raddr)
 	}
 }
 
@@ -40,6 +40,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("My local addr: ", conn.LocalAddr())
 
 	go reader(conn)
 
